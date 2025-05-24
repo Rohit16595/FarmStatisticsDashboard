@@ -8,13 +8,13 @@ def load_data():
     try:
         master = pd.read_csv(os.path.join(data_path, "master.csv"))
         device = pd.read_csv(os.path.join(data_path, "device_inventory.csv"))
-        disconnected = pd.read_csv(os.path.join(data_path, "disconnected.csv"))
-        return master, device, disconnected
+        Disconnected = pd.read_csv(os.path.join(data_path, "Disconnected.csv"))
+        return master, device, Disconnected
     except FileNotFoundError:
         return None, None, None
 
 def calculate_metrics(selected_date, selected_cluster, selected_farm):
-    master, device, disconnected = load_data()
+    master, device, Disconnected = load_data()
     
     # Filter master data
     farm_data = master[(master["cluster"] == selected_cluster) & 
@@ -22,31 +22,31 @@ def calculate_metrics(selected_date, selected_cluster, selected_farm):
     
     # Device calculations
     total_devices = device[device["farm_name"] == selected_farm]["device_id"].nunique()
-    gateways = device[device["farm_name"] == selected_farm]["gateway_id"].nunique()
+    gateways = device[device["farm_name"] == selected_farm]["gatewayid"].nunique()
     
     # Disconnected calculations
-    disconnected["entry_date"] = pd.to_datetime(disconnected["entry_date"])
-    filtered_disconnected = disconnected[
-        (disconnected["entry_date"] == pd.to_datetime(selected_date)) &
-        (disconnected["farm_name"] == selected_farm) &
-        (disconnected["data_quality"] == "disconnected")
+    Disconnected["entry_date"] = pd.to_datetime(Disconnected["entry_date"])
+    filtered_Disconnected = Disconnected[
+        (Disconnected["entry_date"] == pd.to_datetime(selected_date)) &
+        (Disconnected["farm_name"] == selected_farm) &
+        (Disconnected["data_quality"] == "Disconnected")
     ]
     
-    disconnected_count = filtered_disconnected.shape[0]
-    c_type_disconnected = filtered_disconnected[
-        filtered_disconnected["Device_Type"].str.contains("C")
+    Disconnected_count = filtered_Disconnected.shape[0]
+    c_type_Disconnected = filtered_Disconnected[
+        filtered_Disconnected["Device_type"].str.contains("C")
     ].shape[0]
     
     # Gateway issue check
-    gateway_issue = "Yes" if disconnected_count == total_devices else "No"
+    gateway_issue = "Yes" if Disconnected_count == total_devices else "No"
     
     return {
         "vcm": farm_data["VCM"].values[0] if not farm_data.empty else "N/A",
         "total_devices": total_devices,
         "gateways": gateways,
-        "disconnected": disconnected_count,
-        "c_type_disconnected": c_type_disconnected,
+        "Disconnected": Disconnected_count,
+        "c_type_Disconnected": c_type_Disconnected,
         "gateway_issue": gateway_issue,
-        "disconnected_ids": filtered_disconnected["device_id"].tolist(),
-        "device_types": filtered_disconnected["Device_Type"].value_counts()
+        "Disconnected_ids": filtered_Disconnected["device_id"].tolist(),
+        "Device_types": filtered_Disconnected["Device_type"].value_counts()
     }
