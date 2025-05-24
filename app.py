@@ -164,7 +164,7 @@ def user_frontend():
 # ---------------------------
 # MAIN APP
 # ---------------------------
- def main():
+def main():
     if "logged_in" not in st.session_state:
         login_page()
     else:
