@@ -61,6 +61,7 @@ def process_file(uploaded_file, target_name):
         st.success(f"{target_name.replace('.csv', ")} uploaded successfully!")
     except Exception as e:
         st.error(f"Error processing {file_type.replace('_', ' ')} file: {str(e)}")
+        return False
 
 def create_user(username, password, role):
     users_df = load_users()
