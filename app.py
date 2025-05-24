@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from auth import login_page, load_users
-from data_processor import load_data, calculate_metrics
+from Metric_Calculation import load_data, calculate_metrics
 import os
 import bcrypt
 
