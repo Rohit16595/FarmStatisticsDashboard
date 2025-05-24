@@ -58,7 +58,7 @@ def process_file(uploaded_file, target_name):
             df = pd.read_csv(uploaded_file)
         
         df.to_csv(os.path.join("data", target_name), index=False)
-        st.success(f"{target_name.replace('.csv', '")} uploaded successfully!")
+        st.success(f"{target_name.replace('.csv', ")} uploaded successfully!")
     except Exception as e:
         st.error(f"Error processing file: {str(e)}")
 
@@ -140,7 +140,7 @@ def user_frontend():
 # ---------------------------
 # MAIN APP
 # ---------------------------
-def main():
+ def main():
     if "logged_in" not in st.session_state:
         login_page()
     else:
