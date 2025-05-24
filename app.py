@@ -12,34 +12,43 @@ import bcrypt
 def admin_backend():
     st.title("Admin Dashboard")
     
-    # File upload section
+    # File upload section with 3 separate buttons
     st.header("Data Upload Center")
+    
     col1, col2, col3 = st.columns(3)
     
     with col1:
         st.subheader("Master File")
-        master_file = st.file_uploader("Upload farm metadata", 
-                                      type=["csv", "xlsx"], 
-                                      key="master")
+        master_file = st.file_uploader(
+            "Upload Farm Metadata",
+            type=["csv", "xlsx"],
+            key="master_upload"
+        )
         if master_file:
-            process_file(master_file, "master.csv")
+            if handle_file_upload(master_file, "master"):
+                st.success("Master file uploaded successfully!")
     
     with col2:
         st.subheader("Device Inventory")
-        device_file = st.file_uploader("Upload device details", 
-                                      type=["csv", "xlsx"], 
-                                      key="device")
+        device_file = st.file_uploader(
+            "Upload Device Details",
+            type=["csv", "xlsx"],
+            key="device_upload"
+        )
         if device_file:
-            process_file(device_file, "device_inventory.csv")
+            if handle_file_upload(device_file, "device_inventory"):
+                st.success("Device inventory uploaded successfully!")
     
     with col3:
         st.subheader("Disconnected Devices")
-        disconnected_file = st.file_uploader("Upload status data", 
-                                           type=["csv", "xlsx"], 
-                                           key="disconnected")
+        disconnected_file = st.file_uploader(
+            "Upload Status Data",
+            type=["csv", "xlsx"],
+            key="disconnected_upload"
+        )
         if disconnected_file:
-            process_file(disconnected_file, "disconnected.csv")
-
+            if handle_file_upload(disconnected_file, "disconnected"):
+                st.success("Disconnected data uploaded successfully!")
     # User management
     st.header("User Management")
     with st.form("user_form"):
