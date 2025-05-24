@@ -60,7 +60,7 @@ def process_file(uploaded_file, target_name):
         df.to_csv(os.path.join("data", target_name), index=False)
         st.success(f"{target_name.replace('.csv', ")} uploaded successfully!")
     except Exception as e:
-        st.error(f"Error processing file: {str(e)}")
+        st.error(f"Error processing {file_type.replace('_', ' ')} file: {str(e)}")
 
 def create_user(username, password, role):
     users_df = load_users()
