@@ -59,17 +59,31 @@ def admin_backend():
         if st.form_submit_button("Create User"):
             create_user(new_user, new_pass, new_role)
 
-def process_file(uploaded_file, target_name):
+def handle_file_upload(uploaded_file, file_type):
     try:
         if uploaded_file.name.endswith(('.xlsx', '.xls')):
             df = pd.read_excel(uploaded_file)
         else:
             df = pd.read_csv(uploaded_file)
         
-        df.to_csv(os.path.join("data", target_name), index=False)
-        st.success(f"{target_name.replace('.csv', ")} uploaded successfully!")
+        # Validate required columns
+        required_columns = {
+            "master": ["farm_name", "cluster", "VCM"],
+            "device_inventory": ["farm_name", "device_id", "gateway_id", "breed", "housing_type"],
+            "disconnected": ["farm_name", "device_id", "entry_date", "data_quality", "Device_Type"]
+        }
+        
+        if not all(col in df.columns for col in required_columns[file_type]):
+            missing = [col for col in required_columns[file_type] if col not in df.columns]
+            raise ValueError(f"Missing columns: {', '.join(missing)}")
+        
+        # Save to appropriate file
+        filename = f"data/{file_type}.csv"
+        df.to_csv(filename, index=False)
+        return True
+        
     except Exception as e:
-        st.error(f"Error processing {file_type.replace('_', ' ')} file: {str(e)}")
+        st.error(f"Error processing {file_type.replace('_', ' ')} file: {str(e)}")  # Fixed line
         return False
 
 def create_user(username, password, role):
